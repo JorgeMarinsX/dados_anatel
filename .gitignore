@@ -1,0 +1,4 @@
+df/
+.conda/
+.streamlit/
+__pycache__/

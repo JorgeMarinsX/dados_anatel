@@ -1,0 +1,6 @@
+google-cloud-bigquery
+streamlit
+numpy
+plotly
+pandas
+pandas-gbq
