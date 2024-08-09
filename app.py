@@ -1,38 +1,29 @@
 import streamlit as st
 import pageconfig
 pageconfig.pagConfig()
-import dash
+import user
+import front
+import sidebar
 
-st.title("Supranet | Estudo de Dados Anatel")
+if 'authentication_status' not in st.session_state or st.session_state['authentication_status'] != True:
+    st.title("Faça login para acessar a dashboard")
+    typed_username = st.text_input('Nome de usuário')
+    typed_password = st.text_input("Senha", type='password')
+    login_button = st.button('Login')
+    if login_button:
+        if user.login(typed_username, typed_password):
+            st.success("Login realizado com sucesso!")
+            st.rerun()
+        else:
+            st.error('Usuário ou senha inválidos')
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(['Geral', 'MENSAL: Ritmo de crescimento', 
-                                        'ANUAL: Ritmo de crescimento', 'Indicadores Supranet', 
-                                        'Tabelas'])
 
-with tab1:
-    st.header('G5 em acessos por ano, considerando todas as cidades')
-    st.plotly_chart(dash.crescimentoTodasAsCidades())
-    
-with tab2:
-    st.header('Acessos em relação aos principais concorrentes')
-    st.plotly_chart(dash.graficoLinhaEmpresas(), use_container_width=True)
+elif st.session_state['authentication_status'] == True:
+        front.mainDash()
+        nome = st.session_state['nome']
+        painel = st.sidebar
+        with painel:
+            sidebar.renderSidebar()
 
-with tab3:
-    st.header('Gráfico de crescimento ano a ano')
-    
-    linhas1, barras1 = st.tabs(['Visualizar em linhas', 'Visualizar em barras'])
-    
-    with linhas1:
-        st.plotly_chart(dash.crescimentoLinhas())
-    
-    with barras1:
-        st.plotly_chart(dash.crescimentoBarras())
 
-with tab4:
-    st.header('Crescimento Mensal Supranet')
-    st.plotly_chart(dash.crescimentoSupranetMensal())
 
-with tab5:
-    st.header('Tabela de crescimento geral por cidade')
-    tabela = dash.tabelaGeral()
-    st.write(tabela)

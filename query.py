@@ -19,3 +19,14 @@ def queryGeralNominal():
     query = 'SELECT * FROM `dadosanatel-430317.dadosanatel072024.dadosAnatel2019-2024`'
     df = pandas_gbq.read_gbq(query)
     return df
+
+def queryLogin(username):
+    query = f"""SELECT nomeexibido, username, password FROM `dadosanatel-430317.dadosanatel072024.users` WHERE username = '{username}'"""
+    user = pandas_gbq.read_gbq(query)
+    return user
+
+
+def queryUserData(username):
+    query = f"""SELECT nomeexibido, email FROM `dadosanatel-430317.dadosanatel072024.users` WHERE username = '{username}'"""
+    user = pandas_gbq.read_gbq(query)
+    return user

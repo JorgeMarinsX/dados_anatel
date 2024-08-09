@@ -2,3 +2,5 @@ df/
 .conda/
 .streamlit/
 __pycache__/
+setup.sh
+Procfile
