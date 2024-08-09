@@ -4,3 +4,4 @@ numpy
 plotly
 pandas
 pandas-gbq
+bcrypt
