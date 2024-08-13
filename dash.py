@@ -150,7 +150,7 @@ def crescimentoTodasAsCidades():
 def crescimentoLinhas():
     df = query.queryGeralNominal()
     
-    # Converter os nomes das empresas para minúsculas
+    # Converter os nomes das empresas para maiúsculas
     df['Empresa'] = df['Empresa'].str.upper()
     
     # Interface para seleção de cidade
@@ -159,17 +159,20 @@ def crescimentoLinhas():
     # Filtra dados para a cidade selecionada
     df_filtrado = df[df['Município'] == cidade_selecionada]
     
-    # Agrupa os dados por empresa e ano, encontrando o maior valor de acessos em cada ano
-    agrupado = df_filtrado.groupby(['Empresa', 'Ano'], as_index=False)['Acessos'].max()
+    # Agrupa os dados por empresa, ano e mês, encontrando o maior valor de acessos em cada ano
+    agrupado = df_filtrado.groupby(['Empresa', 'Ano', 'Mês'], as_index=False)['Acessos'].sum()
     
-    # Calcula o total de acessos por empresa
-    total_acessos_por_empresa = agrupado.groupby('Empresa')['Acessos'].sum().reset_index()
+    # Seleciona o mês com o maior número de acessos para cada empresa e ano
+    max_acessos_por_ano = agrupado.loc[agrupado.groupby(['Empresa', 'Ano'])['Acessos'].idxmax()]
     
-    # Seleciona as 10 principais empresas com mais acessos
+    # Calcula o total de acessos por empresa (baseado no mês de maior acessos em cada ano)
+    total_acessos_por_empresa = max_acessos_por_ano.groupby('Empresa')['Acessos'].sum().reset_index()
+    
+    # Seleciona as 5 principais empresas com mais acessos
     top_empresas = total_acessos_por_empresa.nlargest(5, 'Acessos')['Empresa']
     
-    # Filtra o DataFrame para conter apenas as 10 principais empresas
-    df_top = agrupado[agrupado['Empresa'].isin(top_empresas)]
+    # Filtra o DataFrame para conter apenas as 5 principais empresas
+    df_top = max_acessos_por_ano[max_acessos_por_ano['Empresa'].isin(top_empresas)]
 
     # Gráfico de linhas com anos no eixo X e acessos no eixo Y
     fig = px.line(df_top, x='Ano', y='Acessos', color='Empresa', 
@@ -180,31 +183,63 @@ def crescimentoLinhas():
 
 def crescimentoBarras():
     df = query.queryGeralNominal()
-
-    # Converter os nomes das empresas para minúsculas
+    
+    # Converter os nomes das empresas para maiúsculas
     df['Empresa'] = df['Empresa'].str.upper()
-
+    
     # Interface para seleção de cidade
-    cidade_selecionada = st.selectbox(label="Selecione uma cidade", options=df['Município'].unique(), key=16)
+    cidade_selecionada = st.selectbox(label="Selecione uma cidade", options=df['Município'].unique(), key=17)
 
     # Filtra dados para a cidade selecionada
     df_filtrado = df[df['Município'] == cidade_selecionada]
     
-    # Agrupa os dados por empresa e ano, encontrando o maior valor de acessos em cada ano
-    agrupado = df_filtrado.groupby(['Empresa', 'Ano'], as_index=False)['Acessos'].max()
+    # Agrupa os dados por empresa, ano, mês, tecnologia e meio de acesso, somando os acessos totais
+    agrupado = df_filtrado.groupby(['Empresa', 'Ano', 'Mês', 'Tecnologia', 'Meio de Acesso'], as_index=False)['Acessos'].sum()
     
-    # Calcula o total de acessos por empresa
-    total_acessos_por_empresa = agrupado.groupby('Empresa')['Acessos'].sum().reset_index()
+    # Seleciona o mês com o maior número de acessos para cada combinação de empresa, ano, tecnologia e meio de acesso
+    max_acessos_por_ano = agrupado.loc[agrupado.groupby(['Empresa', 'Ano', 'Tecnologia', 'Meio de Acesso'])['Acessos'].idxmax()]
+    
+    # Calcula o total de acessos por empresa (baseado no mês de maior acessos em cada ano)
+    total_acessos_por_empresa = max_acessos_por_ano.groupby('Empresa')['Acessos'].sum().reset_index()
     
     # Seleciona as 5 principais empresas com mais acessos
     top_empresas = total_acessos_por_empresa.nlargest(5, 'Acessos')['Empresa']
     
     # Filtra o DataFrame para conter apenas as 5 principais empresas
-    df_top = agrupado[agrupado['Empresa'].isin(top_empresas)]
+    df_top = max_acessos_por_ano[max_acessos_por_ano['Empresa'].isin(top_empresas)]
 
     # Gráfico de barras com anos no eixo X e acessos no eixo Y
     fig = px.bar(df_top, x='Ano', y='Acessos', color='Empresa', 
                  title=f'Crescimento por Ano para as 5 Principais Empresas em {cidade_selecionada}', barmode='group')
     fig.update_xaxes(ticks='inside')
+    
+    return fig
 
+def participacaoDeMercado():
+    df = query.queryGeralNominal()
+    
+    # Converter os nomes das empresas para maiúsculas
+    df['Empresa'] = df['Empresa'].str.upper()
+    
+    # Interface para seleção de cidade e ano
+    cidade_selecionada = st.selectbox(label="Selecione uma cidade", options=df['Município'].unique(), key=18)
+    ano_selecionado = st.selectbox(label="Selecione um ano", options=df['Ano'].unique(), key=16)
+    
+    # Filtra dados para a cidade e ano selecionados
+    df_filtrado = df[(df['Município'] == cidade_selecionada) & (df['Ano'] == ano_selecionado)]
+    
+    # Agrupa os dados por empresa, somando os acessos totais (considerando todas as tecnologias e meios de acesso)
+    total_acessos_por_empresa = df_filtrado.groupby('Empresa')['Acessos'].sum().reset_index()
+    
+    # Seleciona as 5 principais empresas com mais acessos
+    top_empresas = total_acessos_por_empresa.nlargest(5, 'Acessos')
+
+    # Calcula a participação de mercado
+    top_empresas['Participacao'] = (top_empresas['Acessos'] / top_empresas['Acessos'].sum()) * 100
+    
+    # Gráfico de pizza mostrando a porcentagem de participação de mercado
+    fig = px.pie(top_empresas, values='Participacao', names='Empresa', 
+                 title=f'Participação de Mercado entre os 5 Maiores Provedores em {cidade_selecionada} ({ano_selecionado})', 
+                 labels={'Participacao': 'Participação de Mercado (%)'})
+    
     return fig

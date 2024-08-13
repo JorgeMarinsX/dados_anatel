@@ -22,13 +22,17 @@ def mainDash():
     with tab3:
         st.header('Gráfico de crescimento ano a ano')
     
-        linhas1, barras1 = st.tabs(['Visualizar em linhas', 'Visualizar em barras'])
+        linhas1, barras1, mercado = st.tabs(['Visualizar em linhas', 'Visualizar em barras', 
+                                             'Participação de mercado'])
     
         with linhas1:
             st.plotly_chart(dash.crescimentoLinhas())
     
         with barras1:
             st.plotly_chart(dash.crescimentoBarras())
+
+        with mercado:
+            st.plotly_chart(dash.participacaoDeMercado())
 
     with tab4:
         st.header('Crescimento Mensal Supranet')
