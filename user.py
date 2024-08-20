@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas_gbq
-import connect as ct
 import query
 import bcrypt
 

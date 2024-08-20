@@ -1,5 +1,4 @@
 import streamlit as st
-import front
 import user
 
 if 'authentication_status' not in st.session_state:

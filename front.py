@@ -52,8 +52,6 @@ def updateUserForm():
     df = pd.DataFrame(
             {
                 'nomeexibido': [f'{nomeExibicao}'],
-                'nomeexibido': [f'{nomeExibicao}'],
-                'nomeexibido': [f'{nomeExibicao}'],
                 'email': [f'{email}'],
             }
     )

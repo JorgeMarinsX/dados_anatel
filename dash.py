@@ -34,15 +34,12 @@ def crescimentoSupranetMensal():
     df_supranet = df[df['Empresa'] == 'supranet telecom e informatica ltda']
     anos_possiveis = sorted(df_supranet['Ano'].unique())
     ano_selecionado = st.selectbox("Selecione um ano", anos_possiveis, key=7)
-
-
     
     # Filtra os dados para a empresa Supranet e o ano selecionado
     empresa = df_supranet[df_supranet['Ano'] == ano_selecionado]
     
     # Agrupa por mês e soma os acessos
     soma_acessos_mensal = empresa.groupby("Mês")['Acessos'].sum().reset_index()
-
 
     #Exporta o gráfico
     fig = px.line(soma_acessos_mensal, x="Mês", y="Acessos", title='Acessos por mês da Supranet', markers=True)
