@@ -3,14 +3,15 @@ import pandas as pd
 import dash
 import query
 import user
+import register
 
 
 def mainDash():
     st.title("Supranet | Estudo de Dados Anatel")
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(['Geral', 'MENSAL: Ritmo de crescimento', 
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(['Geral', 'MENSAL: Ritmo de crescimento', 
                                         'ANUAL: Ritmo de crescimento', 'Indicadores Supranet', 
-                                        'Tabelas'])
+                                        'Tabelas', 'Cadastrar novo usuário'])
     with tab1:
         st.header('G5 em acessos por ano, considerando todas as cidades')
         st.plotly_chart(dash.crescimentoTodasAsCidades())
@@ -42,6 +43,9 @@ def mainDash():
         st.header('Tabela de crescimento geral por cidade')
         tabela = dash.tabelaGeral()
         st.write(tabela)
+
+    with tab6:
+        register.renderFormCadastro()
 
 def updateUserForm():
     user_data = query.queryUserData(st.session_state['nome'])

@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas_gbq
+import pandas as pd
 import query
 import bcrypt
 
@@ -22,7 +23,20 @@ def login(username, password):
         else:
             st.session_state['authentication_status'] = False
             return False
-            
+        
+def newUser(nomeExibido, email, username, password, level):
+    password_hashed = hash_password(password)
+    df = pd.DataFrame(
+        {
+            'nomeexibido': [f'{nomeExibido}'],
+            'email': [f'{email}'],
+            'username': [f'{username}'],
+            'password': [f'{password_hashed}'],
+            'level': [f'{level}']
+        }
+    )
+    pandas_gbq.to_gbq(df, 'dadosanatel-430317.dadosanatel072024.users', if_exists='append')
+
 def updateUser(df):
     pandas_gbq.to_gbq(df, 'dadosanatel-430317.dadosanatel072024.users', if_exists='replace')
 
