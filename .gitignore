@@ -1,6 +1,7 @@
 df/
 .conda/
 .streamlit/
+.ruff_cache/
 __pycache__/
 setup.sh
 Procfile
