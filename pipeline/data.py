@@ -1,11 +1,11 @@
 import pandas as pd
 
 def treatData():
-    df = pd.read_csv('Acessos_Banda_Larga_Fixa_2019-2020.csv', sep=';')
-    df2 = pd.read_csv('Acessos_Banda_Larga_Fixa_2021.csv', sep=';')
-    df3 = pd.read_csv('Acessos_Banda_Larga_Fixa_2022.csv', sep=';')
-    df4 = pd.read_csv('Acessos_Banda_Larga_Fixa_2023.csv', sep=';')
-    df5 = pd.read_csv('Acessos_Banda_Larga_Fixa_2024.csv', sep=';')
+    df = pd.read_csv('zipdownloader/processados/Acessos_Banda_Larga_Fixa_2019-2020.csv', sep=';')
+    df2 = pd.read_csv('zipdownloader/processados/Acessos_Banda_Larga_Fixa_2021.csv', sep=';')
+    df3 = pd.read_csv('zipdownloader/processados/Acessos_Banda_Larga_Fixa_2022.csv', sep=';')
+    df4 = pd.read_csv('zipdownloader/processados/Acessos_Banda_Larga_Fixa_2023.csv', sep=';')
+    df5 = pd.read_csv('zipdownloader/processados/Acessos_Banda_Larga_Fixa_2024.csv', sep=';')
 
 #headers que iremos utilizar
     headers = ['Ano','Mês','Empresa', 'UF', 'Município', 'Tecnologia', 'Meio de Acesso','Acessos']
@@ -29,7 +29,7 @@ def treatData():
 def uneTabelas():
     dfs = treatData()
     tabelaUnida = pd.concat(dfs)
-    tabelaUnida.to_csv('out.csv', index=False)
+    tabelaUnida.to_csv('zipdownloader/processados/out.csv', index=False)
 
 #exporta o documento#
 uneTabelas()

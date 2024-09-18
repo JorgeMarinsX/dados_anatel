@@ -5,3 +5,5 @@ df/
 __pycache__/
 setup.sh
 Procfile
+pipeline/zipdownloader/
+pipeline/processador_zip.log

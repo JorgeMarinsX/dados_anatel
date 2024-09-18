@@ -4,7 +4,7 @@ import requests
 from loguru import logger
 
 class ProcessadorDeArquivosZip:
-    def _init_(self, url, zip_path, extracao_caminho, processamento_caminho):
+    def __init__(self, url, zip_path, extracao_caminho, processamento_caminho):
         self.url = url
         self.zip_path = zip_path
         self.extracao_caminho = extracao_caminho
