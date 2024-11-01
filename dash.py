@@ -15,11 +15,11 @@ def formataMeses():
 #Geral
 def totalAcessos():
     df = query.queryTotalAcessos()
-    mes = df["Mês"].unique()
+    mes = sorted(df["Mês"].unique())
     meses = formataMeses()
     ano_selecionado = st.selectbox("Selecione um ano", df['Ano'].unique(), key=1)
     fig = px.line(df[df['Ano'] == ano_selecionado], x="Mês", y="Acessos", title='Acessos por mês', markers=True)
-    fig.update_xaxes(title_text="Meses do ano", range=[0,13], fixedrange=True, tickvals=mes, ticktext=meses) 
+    fig.update_xaxes(title_text="Meses do ano", range=len(mes), fixedrange=True, tickvals=sorted(mes), ticktext=meses) 
     fig.update_yaxes(title_text="Acessos por mês", fixedrange=True)
     return fig
 
@@ -98,7 +98,7 @@ def graficoLinhaEmpresas():
     # Cria o gráfico de barras
     fig = px.bar(df_top, x='Mês', y='Acessos', color='Empresa', barmode='group',
                  title=f'Acessos por Mês para as 10 Principais Empresas em {cidade_selecionada} ({ano_selecionado})')
-    fig.update_xaxes(type='category', tickvals=mes, ticktext=meses)  # Garante que os meses sejam tratados como categorias ordenadas
+    fig.update_xaxes(tickvals=mes, ticktext=meses)  # Garante que os meses sejam tratados como categorias ordenadas
     fig.update_layout(height=800, legend=dict(yanchor='middle', xanchor='left', x=-0, y=-0.5))
 
     return fig

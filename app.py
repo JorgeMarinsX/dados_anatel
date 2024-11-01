@@ -3,14 +3,6 @@ import user
 import front
 import sidebar
 
-st.set_page_config(layout='wide',
-                                page_title='Supranet | Acompanhamento dados Anatel', 
-                                page_icon='assets/dashboard.png',
-                                menu_items={
-                                    'Get help': None,
-                                    'Report a bug': None,
-                                    'About': None
-                                    })
 
 if 'authentication_status' not in st.session_state or not st.session_state['authentication_status']:
     col1, col2 = st.columns(2)

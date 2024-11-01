@@ -9,17 +9,7 @@ else:
 def renderSidebar():
     nome = st.session_state['nome']
     st.header(f"Seja bem-vindo(a), {nome}")
-    #st.button("Editar meus dados", use_container_width=True)
-    #st.button("Cadastrar usuário", use_container_width=True)
     sair = st.button("Sair", use_container_width=True)
 
     if sair:
         user.logOut()
-
-    #front.updateUserForm()
-
-
-
-
-
-
